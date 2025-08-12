@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    html, body, .container {
+      height: 100%;
+    }
+    body {
+      background: #e98b9e;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    .merrywrap {
+      position: absolute;
+      right: 40px;
+      left: 40px;
+      bottom: 40px;
+      top: 40px;
+    }
+    .giftbox {
+      position: absolute;
+      width: 500px;
+      height: 400px;
+      left: 45%;
+      margin-left: -150px;
+      bottom: 0;
+      z-index: 10;
+    }
+    .giftbox > div {
+      background: #faf7eb;
+      position: absolute;
+    }
+    .giftbox:after {
+      position: absolute;
+      content: "ABRIME!";
+      width: 100%;
+      left: -2%;
+      top: 80%;
+      transform: translateY(-50%) rotate(-20deg);
+      transform-origin: 0 0;
+      color: #e7e7e7;
+      text-shadow: 5px 5px 0px #000000;
+      font-family: cursive;
+      font-size: 50px;
+      text-align: center;
+      padding: 10px;
+    }
+    .cover {
+      width: 100%;
+      top: 0;
+      left: 0;
+      height: 25%;
+      z-index: 2;
+      border-radius: 15px;
+    }
+    .cover:before {
+      position: absolute;
+      height: 100%;
+      left: 50%;
+      width: 50px;
+      transform: translateX(-50%);
+      background: #e24f75;
+      content: "";
+    }
+    .cover > div {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      left: 50%;
+      top: -50px;
+      transform: translateX(-50%);
+    }
+    .cover > div:before,
+    .cover > div:after {
+      position: absolute;
+      left: -25%;
+      top: 0;
+      width: 150%;
+      height: 100%;
+      content: "";
+      box-shadow: inset 0px 0px 0px 15px #e24f75;
+      border-radius: 30px;
+      transform-origin: 50% 100%;
+    }
+    .cover > div:before {
+      transform: translateX(-45%) skewY(40deg);
+    }
+    .cover > div:after {
+      transform: translateX(45%) skewY(-40deg);
+    }
+    .box {
+      right: 5%;
+      left: 5%;
+      height: 80%;
+      bottom: 0;
+      border-radius: 15px;
+    }
+    .box:before {
+      width: 50px;
+      height: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #e24f75;
+      content: "";
+      position: absolute;
+    }
+    .box:after {
+      width: 100%;
+      height: 30px;
+      background: rgba(0, 0, 0, 0.2);
+      content: "";
+      position: absolute;
+      bottom: 0;
+      border-radius: 0 0 15px 15px;
+    }
+    .step-1 .giftbox {
+      animation: wobble 0.5s linear infinite forwards;
+    }
+    .step-1 .cover {
+      animation: wobble 0.5s linear infinite 0.1s forwards;
+    }
+    .step-2 .giftbox:after,
+    .step-3 .giftbox:after,
+    .step-4 .giftbox:after {
+      opacity: 0;
+    }
+    .step-3 .giftbox,
+    .step-4 .giftbox {
+      opacity: 0;
+      z-index: 1;
+    }
+    .step-2 .cover {
+      animation: flyUp 0.4s ease-in forwards;
+    }
+    .step-2 .box {
+      animation: flyDown 0.2s ease-in 0.05s forwards;
+    }
+    @keyframes wobble {
+      25% { transform: rotate(4deg); }
+      75% { transform: rotate(-2deg); }
+    }
+    @keyframes flyUp {
+      100% {
+        transform: translateY(-1000px) rotate(20deg);
+        opacity: 0;
+      }
+    }
+    @keyframes flyDown {
+      100% {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+    }
+    #imagenFinal {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 35%;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 1s ease forwards;
+      z-index: 200;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    #imagenFinal.glow {
+      animation: glow 1.5s infinite alternate;
+    }
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 10px rgba(255, 200, 255, 0.5);
+      }
+      to {
+        box-shadow: 0 0 40px rgba(255, 100, 200, 1);
+      }
+    }
+    #particles,
+    #hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 150;
+    }
+    .sparkle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: sparkle 1s ease-out forwards;
+    }
+    @keyframes sparkle {
+      0% { transform: scale(0.5) translateY(0); opacity: 1; }
+      100% { transform: scale(1.5) translateY(-100px); opacity: 0; }
+    }
+    .heart-up, .heart-down {
+      position: absolute;
+      font-size: 20px;
+      color: #ff8fb0;
+      opacity: 0.8;
+      animation-timing-function: ease-in-out;
+    }
+    .heart-up {
+      animation-name: floatHeartUp;
+    }
+    .heart-down {
+      animation-name: floatHeartDown;
+    }
+    @keyframes floatHeartUp {
+      0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-300px) translateX(-50px) scale(1.5) rotate(30deg);
+        opacity: 0;
+      }
+    }
+    @keyframes floatHeartDown {
+      0% {
+        transform: translateY(-100px) scale(1);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) translateX(30px) scale(1.5) rotate(-30deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="merrywrap" class="merrywrap">
+    <canvas id="snowfall"></canvas>
+    <div class="giftbox">
+      <div class="cover"><div></div></div>
+      <div class="box"></div>
+    </div>
+    <img id="imagenFinal" src="1.jpg" alt="Feliz cumpleaños" />
+    <div class="icons"></div>
+  </div>
+  <canvas id="particles"></canvas>
+  <div id="hearts"></div>
+
+  <audio id="birthdayAudio" src="cumple.mp3"></audio>
+
+  <script>
+    window.onload = function () {
+      const merrywrap = document.getElementById("merrywrap");
+      const box = merrywrap.getElementsByClassName("giftbox")[0];
+      const imagen = document.getElementById("imagenFinal");
+      const audio = document.getElementById("birthdayAudio");
+      let step = 1;
+      const stepMinutes = [2000, 1500, 1000, 1000];
+
+      box.addEventListener("click", openBox, false);
+
+      function stepClass(step) {
+        merrywrap.className = "merrywrap step-" + step;
+      }
+
+      function openBox() {
+        if (step === 1) {
+          box.removeEventListener("click", openBox, false);
+          audio.play().catch(e => console.warn("No se pudo reproducir el audio:", e));
+        }
+
+        stepClass(step);
+
+        if (step === 2) {
+          const rect = box.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          burstParticles(centerX, centerY);
+          setTimeout(() => burstParticles(centerX + 50, centerY - 100), 400);
+          spawnHearts(60);
+        }
+
+        if (step === 3) {
+          document.querySelector(".icons").style.display = "none";
+          imagen.style.display = "block";
+          void imagen.offsetWidth; // fuerza el reflow para reiniciar animación
+          imagen.style.animation = "fadeIn 1s ease forwards";
+          imagen.classList.add("glow");
+          spawnSparkles(imagen);
+        }
+
+        if (step === 4) return;
+        setTimeout(openBox, stepMinutes[step - 1]);
+        step++;
+      }
+
+      const canvas = document.getElementById("particles");
+      const ctx = canvas.getContext("2d");
+      let particles = [];
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      function createParticle(x, y) {
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = Math.random() * 8 + 2;
+        return {
+          x,
+          y,
+          dx: Math.cos(angle) * speed,
+          dy: Math.sin(angle) * speed,
+          life: 200 + Math.random() * 100,
+          radius: Math.random() * 5 + 3,
+          color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+        };
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+          p.x += p.dx;
+          p.y += p.dy;
+          p.life--;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          if (p.life <= 0) particles.splice(i, 1);
+        });
+        requestAnimationFrame(animateParticles);
+      }
+      animateParticles();
+
+      function burstParticles(x, y) {
+        for (let i = 0; i < 300; i++) {
+          particles.push(createParticle(x, y));
+        }
+      }
+
+      function spawnHearts(count) {
+        const hearts = document.getElementById("hearts");
+        for (let i = 0; i < count; i++) {
+          const heart = document.createElement("div");
+          const direction = Math.random() > 0.5 ? 'up' : 'down';
+          heart.className = direction === 'up' ? "heart-up" : "heart-down";
+          heart.innerHTML = "❤️";
+          heart.style.left = Math.random() * 100 + "vw";
+          heart.style.fontSize = Math.random() * 25 + 25 + "px";
+          heart.style.animationDuration = Math.random() * 4 + 6 + "s";
+          heart.style.top = direction === 'down' ? "-80px" : "100vh";
+          hearts.appendChild(heart);
+          setTimeout(() => heart.remove(), 12000);
+        }
+      }
+
+      function spawnSparkles(img) {
+        for (let i = 0; i < 10; i++) {
+          const sparkle = document.createElement("div");
+          sparkle.className = "sparkle";
+          const rect = img.getBoundingClientRect();
+          sparkle.style.left = rect.left + Math.random() * rect.width + "px";
+          sparkle.style.top = rect.top + Math.random() * rect.height + "px";
+          document.body.appendChild(sparkle);
+          setTimeout(() => sparkle.remove(), 1000);
+        }
+      }
+    };
+  </script>
+</body>
+</html>
